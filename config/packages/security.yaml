@@ -38,9 +38,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/comptable, roles: ROLE_COMPTABLE }
         - { path: ^/user, roles: ROLE_ADMIN }
-        - { path: ^/client, roles: ROLE_CLIENT }
+        - { path: ^/annee, roles: ROLE_ADMIN }
+        - { path: ^/fichier/nom/bilan, roles: ROLE_ADMIN }
+        - { path: ^/fichier, roles: IS_AUTHENTICATED }
+        - { path: ^/fichier, roles: IS_AUTHENTICATED }
 
 when@test:
     security:
