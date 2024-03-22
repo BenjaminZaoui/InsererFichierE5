@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 #[Route('/fichier')]
@@ -35,7 +36,7 @@ class FichierController extends AbstractController
     }
 
 
-
+    #[IsGranted('ROLE_ADMIN', statusCode: 404, message: 'Access Denied.')]
     #[Route('/{id}/edit', name: 'app_fichier_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Fichier $fichier, EntityManagerInterface $entityManager): Response
     {

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/fichier/nom/bilan')]
 class FichierNomBilanController extends AbstractController
@@ -27,27 +28,7 @@ class FichierNomBilanController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'app_fichier_nom_bilan_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user =$this->getUser();
-        $fichierNomBilan = new FichierNomBilan();
-        $form = $this->createForm(FichierNomBilanType::class, $fichierNomBilan);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($fichierNomBilan);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_fichier_nom_bilan_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('fichier_nom_bilan/new.html.twig', [
-            'fichier_nom_bilan' => $fichierNomBilan,
-            'form' => $form,
-            'user'=>$user->getUserIdentifier()
-        ]);
-    }
 
     #[Route('/admin/addBilan', name: 'app_fichierNomBilan_new', methods: ['GET'])]
     public function newBilan( FichierNomBilanRepository $fichierNomBilanRepository,EntityManagerInterface $entityManager): Response
@@ -59,7 +40,7 @@ class FichierNomBilanController extends AbstractController
 
 
 
-
+    #[IsGranted('ROLE_ADMIN', statusCode: 404, message: 'Access Denied.')]
     #[Route('/{id}/edit', name: 'app_fichier_nom_bilan_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, FichierNomBilan $fichierNomBilan, EntityManagerInterface $entityManager): Response
     {
