@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/fichier')]
 class FichierController extends AbstractController
 {
-    #[Route('', name: 'app_fichier_index', methods: ['GET'])]
+    #[Route('/', name: 'app_fichier_index', methods: ['GET'])]
     public function index(FichierRepository $fichierRepository): Response
     {
         $user =$this->getUser();
@@ -35,16 +35,6 @@ class FichierController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_fichier_show', methods: ['GET'])]
-    public function show(Fichier $fichier): Response
-    {
-        $user=$this->getUser();
-        return $this->render('fichier/show.html.twig', [
-            'fichier' => $fichier,
-            'user'=>$user->getUserIdentifier(),
-
-        ]);
-    }
 
     #[Route('/{id}/edit', name: 'app_fichier_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Fichier $fichier, EntityManagerInterface $entityManager): Response
@@ -66,26 +56,5 @@ class FichierController extends AbstractController
             'user'=>$user->getUserIdentifier()
 
         ]);
-    }
-
-    #[Route('/{id}', name: 'app_fichier_delete', methods: ['POST'])]
-    public function delete(Request $request, Fichier $fichier, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$fichier->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($fichier);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_fichier_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/delete/{id}', name: 'app_fichier_delete_file', methods: ['GET'])]
-    public function deleteFile( FichierRepository $fichierRepository,Fichier $fichier,Request $request): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $fichier->getId(), $request->request->get('_token'))) {
-            $fichierRepository->deleteFile($fichier, true);
-        }
-
-        return $this->redirectToRoute('app_fichier_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -106,25 +106,6 @@ class FichierBilanController extends AbstractController
         return $this->redirectToRoute('app_info_client_index',[], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/fichierAnnee{id}', name: 'app_fichier_bilan_annee', methods: ['GET'])]
-    public function fichierAnnee($id, AnneeRepository $anneeRepository,EntityManagerInterface $entityManager,FichierBilanRepository $fichierBilanRepository): Response
-    {
-        $user=$this->getUser();
-        $client = $entityManager->getRepository(InfoClient::class)->findAll();
-        $annee = $anneeRepository->find($id);
-        $fichier = $entityManager->getRepository(FichierNomBilan::class)->findAll();
-        $fichierBilan = $entityManager->getRepository(FichierBilan::class)->findAll();
-
-        return $this->render('fichier_demande/unFichier.twig', [
-            'fichier_nom_bilans' => $fichierBilanRepository->findAll(),
-            'user'=>$user->getUserIdentifier(),
-            'clients' => $client,
-            'fichiers' => $fichier,
-            'fichierBilans'=>$fichierBilan,
-            'annees'=>$annee
-
-        ]);
-    }
 //    #[Route('/mesFichiers/{id}', name:'mesFichiers', methods:['GET', 'POST'])]
 //    public function indexFichierBilan($id,FichierBilanRepository $fichierBilanRepository, FichierNomBilanRepository $fichierNomBilanRepository, Request $request, EntityManagerInterface $entityManager, InfoClientRepository $infoClientRepository): Response
 //    {
@@ -201,7 +182,7 @@ class FichierBilanController extends AbstractController
 
             $nomOriginal = $uploadedFile->getClientOriginalName();
             //changer le chemins d'accès par le votre
-            $destinationDirectory = 'C:/Users/benja/projects/php/InsererFichier/public/fichier/';
+            $destinationDirectory = 'C:\Users\benja\Desktop\test-projet-E5\InsererFichierE5\public\fichier';
             $newFilename = $nomOriginal;
             $uploadedFile->move($destinationDirectory, $newFilename);
             $fichierBilan->setIdUser($user);
@@ -222,26 +203,6 @@ class FichierBilanController extends AbstractController
             'user' => $user->getUserIdentifier()
         ]);
     }
-
-
-    #[Route('/{id}/edit', name: 'app_fichier_bilan_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, FichierBilan $fichierBilan, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(FichierBilanType::class, $fichierBilan);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_fichier_bilan_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('fichier_bilan/edit.html.twig', [
-            'fichier_bilan' => $fichierBilan,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id}', name: 'app_fichier_bilan_delete', methods: ['POST'])]
     public function delete(Request $request, FichierBilan $fichierBilan, EntityManagerInterface $entityManager): Response
     {

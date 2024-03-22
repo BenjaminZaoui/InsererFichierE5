@@ -60,14 +60,6 @@ class FichierNomBilanController extends AbstractController
 
 
 
-    #[Route('/{id}', name: 'app_fichier_nom_bilan_show', methods: ['GET'])]
-    public function show(FichierNomBilan $fichierNomBilan): Response
-    {
-        return $this->render('fichier_nom_bilan/show.html.twig', [
-            'fichier_nom_bilan' => $fichierNomBilan,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_fichier_nom_bilan_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, FichierNomBilan $fichierNomBilan, EntityManagerInterface $entityManager): Response
     {
@@ -88,14 +80,4 @@ class FichierNomBilanController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_fichier_nom_bilan_delete', methods: ['POST'])]
-    public function delete(Request $request, FichierNomBilan $fichierNomBilan, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$fichierNomBilan->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($fichierNomBilan);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_fichier_nom_bilan_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

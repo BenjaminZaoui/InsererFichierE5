@@ -111,7 +111,7 @@ class FichierDemandeController extends AbstractController
             $nomOriginal = $form->get('nom_fichier_demande')->getData()->getClientOriginalName();
             // le chemin ou le fichier est inserer
             $nomOriginal = $uploadedFile->getClientOriginalName();
-            $destinationDirectory = 'C:\Users\benja\projects\php\InsererFichier\public\fichier';//D:\XAMPP\htdocs\WEB\InsererFichier\public\fichier
+            $destinationDirectory = 'C:\Users\benja\Desktop\test-projet-E5\InsererFichierE5\public\fichier';//D:\XAMPP\htdocs\WEB\InsererFichier\public\fichier
             $newFilename = $nomOriginal;
             $uploadedFile->move($destinationDirectory, $newFilename);
             $fichierDemande->setIdUser($user);
@@ -132,7 +132,7 @@ class FichierDemandeController extends AbstractController
             $nomOriginal = $formBilan->get('nom_fichier_bilan')->getData()->getClientOriginalName();
             $nomOriginal = $uploadedFile->getClientOriginalName();
             //Changer le chemin d'accès par le votre
-            $destinationDirectory = 'C:/Users/benja/projects/php/InsererFichier/public/fichier/';
+            $destinationDirectory = 'C:\Users\benja\Desktop\test-projet-E5\InsererFichierE5\public\fichier';
             $newFilename = $nomOriginal;
             $uploadedFile->move($destinationDirectory, $newFilename);
             $fichierBilan->setIdUser($user);
@@ -216,7 +216,8 @@ class FichierDemandeController extends AbstractController
             $nomOriginal = $form->get('nom_fichier_demande')->getData()->getClientOriginalName();
             // le chemin ou le fichier est inserer
             $nomOriginal = $uploadedFile->getClientOriginalName();
-            $destinationDirectory = 'C:\Users\benja\projects\php\InsererFichier\public\fichier';//D:\XAMPP\htdocs\WEB\InsererFichier\public\fichier
+            // le chemin ou le fichier est inserer
+            $destinationDirectory = 'C:\Users\benja\Desktop\test-projet-E5\InsererFichierE5\public\fichier';//D:\XAMPP\htdocs\WEB\InsererFichier\public\fichier
             $newFilename = $nomOriginal;
             $uploadedFile->move($destinationDirectory, $newFilename);
             $fichierDemande->setIdUser($user);
@@ -240,26 +241,7 @@ class FichierDemandeController extends AbstractController
     }
 
 
-    #[Route('/edit/{id}', name: 'app_fichier_demande_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, FichierDemande $fichierDemande, FichierDemandeRepository $fichierDemandeRepository): Response
-    {
-        $user = $this->getUser();
-        $form = $this->createForm(FichierDemandeType::class, $fichierDemande);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fichierDemandeRepository->save($fichierDemande, true);
-//            $entityManager->flush();
-
-            return $this->redirectToRoute('app_fichier_demande_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('fichier_demande/edit.html.twig', [
-            'fichier_demande' => $fichierDemande,
-            'form' => $form,
-            'user' => $user->getUserIdentifier()
-        ]);
-    }
 
 
     #[Route('/view/{name}', name: 'app_view_pdf', methods: ['GET'])]

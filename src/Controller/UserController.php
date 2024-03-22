@@ -25,7 +25,7 @@ class UserController extends AbstractController
         $user = new User();
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
-            'user'=>$user->getUserIdentifier()
+            'user' => $user->getUserIdentifier()
         ]);
     }
 
@@ -85,35 +85,33 @@ class UserController extends AbstractController
     #[Route('/delete/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $idUser = $entityManager->getRepository(User::class)->findOneBy(['email'=> 'orel@admin.com']);
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $idUser = $entityManager->getRepository(User::class)->findOneBy(['email' => 'orel@admin.com']);
 
-            $clients = $entityManager->getRepository(InfoClient::class)->findBy(['id_user'=>$user->getId()]);
-            $fichiersBilans = $entityManager->getRepository(FichierBilan::class)->findBy(['id_user'=>$user->getId()]);
-            $fichiersDemandes = $entityManager->getRepository(FichierDemande::class)->findBy(['id_user'=>$user->getId()]);
-
-            foreach ($clients as $client)
+            $clients = $entityManager->getRepository(InfoClient::class)->findBy(['id_user' => $user->getId()]);
+            $fichiersBilans = $entityManager->getRepository(FichierBilan::class)->findBy(['id_user' => $user->getId()]);
+            $fichiersDemandes = $entityManager->getRepository(FichierDemande::class)->findBy(['id_user' => $user->getId()]);
+            if ($user != $idUser)
             {
-                $client->setIdUser($idUser);
-                $entityManager->persist($client);
+                foreach ($clients as $client) {
+                    $client->setIdUser($idUser);
+                    $entityManager->persist($client);
+                    $entityManager->flush();
+                }
+                foreach ($fichiersBilans as $fichierBilan) {
+                    $fichierBilan->setIdUser($idUser);
+                    $entityManager->persist($fichierBilan);
+                    $entityManager->flush();
+                }
+                foreach ($fichiersDemandes as $fichierDemande) {
+                    $fichierDemande->setIdUser($idUser);
+                    $entityManager->persist($fichierDemande);
+                    $entityManager->flush();
+                }
+                $entityManager->remove($user);
                 $entityManager->flush();
             }
-            foreach ($fichiersBilans as $fichierBilan)
-            {
-                $fichierBilan->setIdUser($idUser);
-                $entityManager->persist($fichierBilan);
-                $entityManager->flush();
-            }
-            foreach ($fichiersDemandes as $fichierDemande )
-            {
-                $fichierDemande->setIdUser($idUser);
-                $entityManager->persist($fichierDemande);
-                $entityManager->flush();
-            }
-            $entityManager->remove($user);
-            $entityManager->flush();
-
-            }
+        }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
