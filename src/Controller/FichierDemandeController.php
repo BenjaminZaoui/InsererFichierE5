@@ -131,6 +131,7 @@ class FichierDemandeController extends AbstractController
             $idNomFichierBilan = $fichierNomBilanRepository->find($idNomFichierBilan);
             $nomOriginal = $formBilan->get('nom_fichier_bilan')->getData()->getClientOriginalName();
             $nomOriginal = $uploadedFile->getClientOriginalName();
+            //Changer le chemin d'accès par le votre
             $destinationDirectory = 'C:/Users/benja/projects/php/InsererFichier/public/fichier/';
             $newFilename = $nomOriginal;
             $uploadedFile->move($destinationDirectory, $newFilename);
